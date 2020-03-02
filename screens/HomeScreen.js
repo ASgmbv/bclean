@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  ScrollView,
+  Alert,
 } from 'react-native';
 import ListItem from '../components/ListItem';
 
@@ -13,13 +15,17 @@ import ListItem from '../components/ListItem';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {selectCurrentUser} from '../redux/user/user.selectors';
+import {selectAllItems} from '../redux/items/items.selectors';
+import {setItems} from '../redux/items/items.actions';
 
 // FIREBASE
 import {firestore} from '../fire';
 
+//PAGES
+import LoadingScreen from './LoadingScreen';
+
 class HomeScreen extends React.Component {
   state = {
-    items: [],
     loading: true,
   };
 
@@ -30,14 +36,20 @@ class HomeScreen extends React.Component {
   unsubscribe = null;
 
   componentDidMount() {
-    const temp = [];
     this.unsubscribe = firestore
       .collection('posts')
       .onSnapshot(querySnapshot => {
+        const temp = [];
         querySnapshot.forEach(doc => {
           temp.push({id: doc.id, ...doc.data()});
         });
-        this.setState({items: [...temp], loading: false});
+        // this.setState({items: [...temp], loading: false});
+        console.log(this.props);
+        console.log('1');
+        this.props.setItems([...temp]);
+        console.log('2');
+        this.setState({loading: false});
+        console.log('3');
       });
   }
 
@@ -45,18 +57,28 @@ class HomeScreen extends React.Component {
     this.unsubscribe();
   }
 
+  itemClicked = item => {
+    this.props.navigation.navigate('CompanyScreen', item);
+  };
+
   render() {
     return this.state.loading ? (
-      <ActivityIndicator style={{marginTop: 100}} size="large" />
+      <LoadingScreen />
     ) : (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={{fontSize: 18}}>Главная</Text>
+          <Text style={styles.titleText}>Главная</Text>
         </View>
+
         <FlatList
-          data={this.state.items}
+          style={styles.content}
+          data={this.props.allItems}
           renderItem={({item}) => (
-            <ListItem item={item} keyExtractor={item.id} />
+            <ListItem
+              onItemClicked={this.itemClicked}
+              item={item}
+              keyExtractor={item.id}
+            />
           )}
           showsVerticalScrollIndicator={false}
         />
@@ -67,21 +89,33 @@ class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 50,
+    flex: 1,
   },
   header: {
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#d8d9db',
-    backgroundColor: '#e0f5ff',
     height: 50,
+    backgroundColor: '#fff',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#777',
+  },
+  titleText: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: 'rgb(112, 172, 177)',
+  },
+  content: {
+    backgroundColor: 'rgb(201, 230, 225)',
+    // backgroundColor: '#fff',
   },
 });
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser,
+  allItems: selectAllItems,
 });
 
-export default connect(mapStateToProps, null)(HomeScreen);
+const mapDispatchToProps = dispatch => ({
+  setItems: items => dispatch(setItems(items)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

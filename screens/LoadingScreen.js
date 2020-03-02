@@ -1,24 +1,19 @@
 import React from 'react';
-import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
-
-import firebase from 'firebase';
+import {View, Text, StyleSheet, ActivityIndicator, Image} from 'react-native';
 
 export default class LoadingScreen extends React.Component {
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        // User is signed in.
-      }
-    });
-  }
-
   render() {
-    // this.props.user ? ()
-
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
-        <ActivityIndicator size="large" />
+        <Image
+          style={{height: 100, width: 100}}
+          source={require('../assets/images/logo.jpg')}
+        />
+        <ActivityIndicator
+          style={{marginVertical: 30}}
+          size="large"
+          color="#fff"
+        />
       </View>
     );
   }
@@ -27,7 +22,12 @@ export default class LoadingScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#BCE2DF',
+  },
+  logo: {
+    height: 200,
+    width: 200,
   },
 });

@@ -10,10 +10,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {createSwitchNavigator, createAppContainer} from 'react-navigation';
-
 // icons
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import React from 'react';
 import {
@@ -26,13 +24,7 @@ import {
   YellowBox,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 // FIREBASE
 import * as firebase from 'firebase';
@@ -51,6 +43,8 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import PostScreen from './screens/PostScreen';
+import CompanyScreen from './screens/CompanyScreen';
+import SearchScreen from './screens/SearchScreen';
 
 // NAVIGATION
 
@@ -62,11 +56,12 @@ const screenOptions = ({route}) => ({
     let iconName;
 
     if (route.name === 'HomeTab') {
-      iconName = 'md-home';
+      return <Icon name="home" size={size + 5} color={color} />;
+    } else if (route.name === 'ProfileTab') {
+      return <Icon name="person" size={size + 5} color={color} />;
     } else {
-      iconName = 'md-contact';
+      return <Icon name="search" size={size + 5} color={color} />;
     }
-    return <Icon name={iconName} size={size} color={color} />;
   },
 });
 
@@ -89,7 +84,6 @@ class App extends React.Component {
         const userRef = await createUserProfileDocument(userAuth);
 
         userRef.onSnapshot(snapShot => {
-          console.log('mercedes01: ' + JSON.stringify(snapShot.data()));
           setCurrentUser({
             id: snapShot.id,
             ...snapShot.data(),
@@ -123,6 +117,15 @@ class App extends React.Component {
     );
   };
 
+  PostsStack = () => {
+    return (
+      <Stack.Navigator headerMode="none" initialRouteName="HomeScreen">
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="CompanyScreen" component={CompanyScreen} />
+      </Stack.Navigator>
+    );
+  };
+
   render() {
     return (
       <NavigationContainer>
@@ -131,10 +134,11 @@ class App extends React.Component {
           tabBarOptions={{
             showLabel: false,
 
-            activeTintColor: '#60c7f7',
-            inactiveTintColor: '#000',
+            activeTintColor: '#rgb(112, 172, 177)',
+            inactiveTintColor: 'rgba(0, 0, 0, 0.5)',
           }}>
-          <Tab.Screen name="HomeTab" component={HomeScreen} />
+          <Tab.Screen name="HomeTab" component={this.PostsStack} />
+          <Tab.Screen name="SearchTab" component={SearchScreen} />
           <Tab.Screen
             name="ProfileTab"
             component={

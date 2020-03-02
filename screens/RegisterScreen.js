@@ -20,7 +20,7 @@ class RegisterScreen extends React.Component {
     displayName: '',
     email: '',
     password: '',
-    errorMessage: null,
+    errorMessage: '',
     buttonPressed: false,
   };
 
@@ -49,64 +49,64 @@ class RegisterScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.greeting}>{`Hello\nSign up to get started`}</Text>
-
-        <View style={styles.errorMessage}>
-          <Text>
-            {this.state.errorMessage && (
-              <Text style={styles.error}>{this.state.errorMessage}</Text>
-            )}
-          </Text>
+        <View style={styles.title}>
+          <Text style={styles.titleText}>{`Создать учетную запись`}</Text>
         </View>
 
         <View style={styles.form}>
-          <View>
-            <Text style={styles.inputTitle}>Full Name</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              value={this.state.name}
-              onChangeText={displayName => this.setState({displayName})}
-            />
-          </View>
+          {this.state.errorMessage ? (
+            <Text style={styles.errorText}>{this.state.errorMessage}</Text>
+          ) : (
+            <></>
+          )}
 
-          <View style={{marginTop: 20}}>
-            <Text style={styles.inputTitle}>Email Address</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              value={this.state.email}
-              onChangeText={email => this.setState({email})}
-            />
-          </View>
+          <TextInput
+            style={styles.input}
+            autoCapitalize="none"
+            placeholder="имя фамилия"
+            value={this.state.name}
+            onChangeText={displayName => this.setState({displayName})}
+          />
 
-          <View style={{marginTop: 20}}>
-            <Text style={styles.inputTitle}>Password</Text>
-            <TextInput
-              style={styles.input}
-              value={this.state.password}
-              onChangeText={password => this.setState({password})}
-              autoCapitalize="none"
-            />
-          </View>
+          <TextInput
+            style={styles.input}
+            autoCapitalize="none"
+            placeholder="email"
+            value={this.state.email}
+            onChangeText={email => this.setState({email})}
+          />
+
+          <TextInput
+            style={styles.input}
+            value={this.state.password}
+            placeholder="password"
+            onChangeText={password => this.setState({password})}
+            autoCapitalize="none"
+          />
+
+          <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
+            {this.state.buttonPressed ? (
+              <ActivityIndicator size="large" />
+            ) : (
+              <Text style={{color: '#fff', fontWeight: '500'}}>
+                Создать учетную запись
+              </Text>
+            )}
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-          {this.state.buttonPressed ? (
-            <ActivityIndicator size="large" />
-          ) : (
-            <Text style={{color: '#fff', fontWeight: '500'}}>Sign up</Text>
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{alignItems: 'center', marginTop: 32}}
-          onPress={() => this.props.navigation.navigate('LoginScreen')}>
-          <Text style={{color: '#414959', fontSize: 13}}>
-            Already have an account?{' '}
-            <Text style={{fontWeight: '500', color: '#e9446a'}}>Login</Text>
-          </Text>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            style={{alignItems: 'center', marginVertical: 32}}
+            onPress={() => this.props.navigation.navigate('LoginScreen')}>
+            <Text style={{color: '#414959', fontSize: 13}}>
+              У вас есть учетная запись?{' '}
+            </Text>
+            <Text style={{fontWeight: '500', color: 'rgb(112, 172, 177)'}}>
+              Вход
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -115,17 +115,23 @@ class RegisterScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'rgb(201, 230, 225)',
   },
-  greeting: {
-    fontSize: 18,
-    marginTop: 40,
-    textAlign: 'center',
-  },
-  errorMessage: {
-    marginTop: 20,
+  title: {
     alignItems: 'center',
-    marginHorizontal: 30,
-    textAlign: 'center',
+    marginHorizontal: 10,
+    marginTop: 100,
+    marginBottom: 40,
+  },
+  titleText: {
+    fontSize: 30,
+    alignSelf: 'flex-start',
+  },
+  errorText: {
+    color: '#e9446a',
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 20,
   },
   inputTitle: {
     color: '#8a8d9e',
@@ -133,30 +139,27 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   form: {
-    marginHorizontal: 30,
-    marginVertical: 40,
+    alignItems: 'center',
+    marginHorizontal: 10,
   },
   input: {
-    borderBottomColor: '#8a8d9e',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    height: 40,
+    borderWidth: 2,
+    borderColor: 'rgb(112, 172, 177)',
+    marginBottom: 15,
+    padding: 10,
     fontSize: 15,
     color: '#161f3d',
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 5,
   },
   button: {
-    marginHorizontal: 30,
-    backgroundColor: '#e9446a',
-    borderRadius: 4,
-    height: 52,
+    width: '100%',
+    padding: 15,
+    backgroundColor: 'rgb(112, 172, 177)',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  error: {
-    color: '#e9446a',
-    fontSize: 13,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginHorizontal: 30,
+    borderRadius: 5,
   },
 });
 

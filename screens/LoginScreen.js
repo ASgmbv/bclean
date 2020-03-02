@@ -29,7 +29,7 @@ class LoginScreen extends React.Component {
       this.setState({buttonPressed: true});
 
       await auth.signInWithEmailAndPassword(email, password);
-      this.props.setCurrentUser(user);
+      this.props.setCurrentUser({...auth.currentUser});
     } catch (error) {
       this.setState({buttonPressed: false});
       this.setState({errorMessage: error.message});
@@ -39,104 +39,106 @@ class LoginScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.greeting}>{`Hello again\nWelcome Back`}</Text>
-
-        <View style={styles.errorMessage}>
-          {<Text style={styles.error}>{this.state.errorMessage}</Text>}
+        <View style={styles.title}>
+          <Text style={styles.titleText}>{'Войти'}</Text>
         </View>
 
         <View style={styles.form}>
-          <View>
-            <Text style={styles.inputTitle}>Email Address</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              value={this.state.email}
-              onChangeText={email => this.setState({email})}
-            />
-          </View>
+          {this.state.errorMessage ? (
+            <Text style={styles.errorText}>{this.state.errorMessage}</Text>
+          ) : (
+            <></>
+          )}
 
-          <View>
-            <Text style={styles.inputTitle}>Password</Text>
-            <TextInput
-              style={styles.input}
-              value={this.state.password}
-              onChangeText={password => this.setState({password})}
-              autoCapitalize="none"
-            />
-          </View>
+          <TextInput
+            style={styles.input}
+            autoCapitalize="none"
+            value={this.state.email}
+            onChangeText={email => this.setState({email})}
+            placeholder="email address"
+          />
+
+          <TextInput
+            style={styles.input}
+            value={this.state.password}
+            onChangeText={password => this.setState({password})}
+            autoCapitalize="none"
+            placeholder="password"
+          />
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              this.handleLogin();
+            }}>
+            {this.state.buttonPressed ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={{color: '#fff', fontWeight: '500'}}>Войти</Text>
+            )}
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            this.handleLogin();
-          }}>
-          {this.state.buttonPressed ? (
-            <ActivityIndicator size="large" />
-          ) : (
-            <Text style={{color: '#fff', fontWeight: '500'}}>Sign In</Text>
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{alignItems: 'center', marginTop: 32}}
-          onPress={() => this.props.navigation.navigate('RegisterScreen')}>
-          <Text style={{color: '#414959', fontSize: 13}}>
-            New to BClean?{' '}
-            <Text style={{fontWeight: '500', color: '#e9446a'}}>Sign up</Text>
-          </Text>
-        </TouchableOpacity>
+        <View style={{alignItems: 'center', marginVertical: 32}}>
+          <Text style={{color: '#414959', fontSize: 13}}>Впервые здесь? </Text>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('RegisterScreen')}>
+            <Text style={{fontWeight: '500', color: 'rgb(112, 172, 177)'}}>
+              Создать учетную запись
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 }
 
+// const entireScreenWidth = Dimensions.get('window').width;
+// EStyleSheet.build({$rem: entireScreenWidth / 380});
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'rgb(201, 230, 225)',
   },
-  greeting: {
-    fontSize: 18,
-    marginTop: 40,
-    textAlign: 'center',
-  },
-  errorMessage: {
-    marginTop: 20,
+  title: {
     alignItems: 'center',
-    marginHorizontal: 30,
-    textAlign: 'center',
+    marginHorizontal: 10,
+    marginTop: 100,
+    marginBottom: 40,
   },
-  inputTitle: {
-    color: '#8a8d9e',
-    fontSize: 10,
-    textTransform: 'uppercase',
+  titleText: {
+    fontSize: 30,
+    alignSelf: 'flex-start',
+  },
+  errorText: {
+    color: '#e9446a',
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 20,
   },
   form: {
-    marginHorizontal: 30,
-    marginVertical: 40,
+    alignItems: 'center',
+    marginHorizontal: 10,
   },
   input: {
-    borderBottomColor: '#8a8d9e',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    height: 40,
+    borderWidth: 2,
+    borderColor: 'rgb(112, 172, 177)',
+    marginBottom: 15,
+    padding: 10,
     fontSize: 15,
     color: '#161f3d',
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 5,
   },
   button: {
-    marginHorizontal: 30,
-    backgroundColor: '#e9446a',
-    borderRadius: 4,
-    height: 52,
+    borderRadius: 5,
+    width: '100%',
+    padding: 15,
+    backgroundColor: 'rgb(112, 172, 177)',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  error: {
-    color: '#e9446a',
-    fontSize: 13,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginHorizontal: 30,
   },
 });
 
