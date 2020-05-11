@@ -1,4 +1,4 @@
-package com.bclean;
+package com.bcleanauca;
 
 import com.facebook.react.ReactActivity;
 

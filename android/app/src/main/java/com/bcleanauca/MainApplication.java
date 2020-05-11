@@ -1,4 +1,4 @@
-package com.bclean;
+package com.bcleanauca;
 
 import android.app.Application;
 import android.content.Context;
