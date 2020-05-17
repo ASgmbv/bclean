@@ -1,11 +1,18 @@
 import React from 'react';
-import {View, Text, StyleSheet, ActivityIndicator, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Image,
+  ImageBackground,
+} from 'react-native';
 
 export default class LoadingScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image
+        <ImageBackground
           style={{height: 100, width: 100}}
           source={require('../assets/images/logo.jpg')}
         />

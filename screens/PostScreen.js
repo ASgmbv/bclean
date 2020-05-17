@@ -139,7 +139,7 @@ export default class PostScreen extends React.Component {
         <View style={styles.header}>
           {/* BACK BUTTON */}
           <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-            <Icon name="arrow-back" size={22} color="rgb(112, 172, 177)"></Icon>
+            <Icon name="arrow-back" size={22} color="rgb(112, 172, 177)" />
           </TouchableOpacity>
         </View>
 
@@ -219,9 +219,7 @@ export default class PostScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'rgb(201, 230, 225)',
-  },
+  container: {},
 
   header: {
     flexDirection: 'row',

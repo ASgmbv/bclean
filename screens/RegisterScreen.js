@@ -15,6 +15,11 @@ import {auth} from '../fire';
 import {setCurrentUser} from '../redux/user/user.actions';
 import {connect} from 'react-redux';
 
+// CUSTOM COMPONENTS
+import Header from '../components/header';
+
+import PrimaryButton from '../components/primaryButton';
+
 class RegisterScreen extends React.Component {
   state = {
     displayName: '',
@@ -31,81 +36,78 @@ class RegisterScreen extends React.Component {
   handleSignUp = async () => {
     try {
       this.setState({buttonPressed: true});
-
+      const {email, password, displayName} = this.state;
       const userCredentials = await auth.createUserWithEmailAndPassword(
-        this.state.email,
-        this.state.password,
+        email,
+        password,
       );
 
       await userCredentials.user.updateProfile({
-        displayName: this.state.displayName,
+        displayName,
       });
     } catch (error) {
-      this.setState({buttonPressed: false});
-      this.setState({errorMessage: error.message});
+      this.setState({buttonPressed: false, errorMessage: error.message});
     }
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>{`Создать учетную запись`}</Text>
-        </View>
+        <Header title="BeClean" />
 
-        <View style={styles.form}>
-          {this.state.errorMessage ? (
-            <Text style={styles.errorText}>{this.state.errorMessage}</Text>
-          ) : (
-            <></>
-          )}
-
-          <TextInput
-            style={styles.input}
-            autoCapitalize="none"
-            placeholder="имя фамилия"
-            value={this.state.name}
-            onChangeText={displayName => this.setState({displayName})}
-          />
-
-          <TextInput
-            style={styles.input}
-            autoCapitalize="none"
-            placeholder="email"
-            value={this.state.email}
-            onChangeText={email => this.setState({email})}
-          />
-
-          <TextInput
-            style={styles.input}
-            value={this.state.password}
-            placeholder="password"
-            onChangeText={password => this.setState({password})}
-            autoCapitalize="none"
-          />
-
-          <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-            {this.state.buttonPressed ? (
-              <ActivityIndicator size="large" />
+        <View style={{padding: 15, flex: 1, justifyContent: 'center'}}>
+          <View style={styles.form}>
+            {this.state.errorMessage ? (
+              <Text style={styles.errorText}>{this.state.errorMessage}</Text>
             ) : (
-              <Text style={{color: '#fff', fontWeight: '500'}}>
-                Создать учетную запись
-              </Text>
+              <></>
             )}
-          </TouchableOpacity>
-        </View>
 
-        <View>
-          <TouchableOpacity
-            style={{alignItems: 'center', marginVertical: 32}}
-            onPress={() => this.props.navigation.navigate('LoginScreen')}>
-            <Text style={{color: '#414959', fontSize: 13}}>
-              У вас есть учетная запись?{' '}
-            </Text>
-            <Text style={{fontWeight: '500', color: 'rgb(112, 172, 177)'}}>
-              Вход
-            </Text>
-          </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              autoCapitalize="none"
+              placeholder="Имя"
+              value={this.state.name}
+              onChangeText={displayName => this.setState({displayName})}
+            />
+
+            <TextInput
+              style={styles.input}
+              autoCapitalize="none"
+              placeholder="Электронный адрес"
+              value={this.state.email}
+              onChangeText={email => this.setState({email})}
+            />
+
+            <TextInput
+              style={styles.input}
+              value={this.state.password}
+              placeholder="Пароль"
+              onChangeText={password => this.setState({password})}
+              autoCapitalize="none"
+            />
+
+            <PrimaryButton onPress={this.handleSignUp}>
+              {this.state.buttonPressed ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={{color: '#fff', fontWeight: 'bold'}}>
+                  Создать учетную запись
+                </Text>
+              )}
+            </PrimaryButton>
+          </View>
+
+          <View>
+            <TouchableOpacity
+              style={{alignItems: 'center', marginVertical: 32}}
+              onPress={() => this.props.navigation.navigate('LoginScreen')}>
+              <Text style={{color: '#414959', fontSize: 13}}>
+                У вас есть учетная запись?{' '}
+              </Text>
+              <Text style={{fontWeight: '500', color: '#598ec2'}}>Вход</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -115,7 +117,6 @@ class RegisterScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(201, 230, 225)',
   },
   title: {
     alignItems: 'center',
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 2,
-    borderColor: 'rgb(112, 172, 177)',
+    borderColor: '#199EF3',
     marginBottom: 15,
     padding: 10,
     fontSize: 15,
@@ -167,4 +168,7 @@ const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user)),
 });
 
-export default connect(null, mapDispatchToProps)(RegisterScreen);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(RegisterScreen);

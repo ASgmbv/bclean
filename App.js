@@ -14,15 +14,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  YellowBox,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, YellowBox} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -45,6 +37,8 @@ import ProfileScreen from './screens/ProfileScreen';
 import PostScreen from './screens/PostScreen';
 import CompanyScreen from './screens/CompanyScreen';
 import SearchScreen from './screens/SearchScreen';
+import ContactScreen from './screens/ContactScreen';
+import BookScreen from './screens/BookScreen';
 
 // NAVIGATION
 
@@ -60,7 +54,7 @@ const screenOptions = ({route}) => ({
     } else if (route.name === 'ProfileTab') {
       return <Icon name="person" size={size + 5} color={color} />;
     } else {
-      return <Icon name="search" size={size + 5} color={color} />;
+      return <Icon name="star" size={size + 3} color={color} />;
     }
   },
 });
@@ -122,6 +116,16 @@ class App extends React.Component {
       <Stack.Navigator headerMode="none" initialRouteName="HomeScreen">
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="CompanyScreen" component={CompanyScreen} />
+        <Stack.Screen name="BookScreen" component={BookScreen} />
+        <Stack.Screen name="ContactScreen" component={ContactScreen} />
+      </Stack.Navigator>
+    );
+  };
+
+  FavoriteStack = () => {
+    return (
+      <Stack.Navigator headerMode="none" initialRouteName="SearchScreen">
+        <Stack.Screen name="SearchScreen" component={SearchScreen} />
       </Stack.Navigator>
     );
   };
@@ -133,12 +137,11 @@ class App extends React.Component {
           screenOptions={screenOptions}
           tabBarOptions={{
             showLabel: false,
-
-            activeTintColor: '#rgb(112, 172, 177)',
-            inactiveTintColor: 'rgba(0, 0, 0, 0.5)',
+            activeTintColor: '#5CB5EC',
+            inactiveTintColor: '#011E3B',
           }}>
           <Tab.Screen name="HomeTab" component={this.PostsStack} />
-          <Tab.Screen name="SearchTab" component={SearchScreen} />
+          <Tab.Screen name="FavoriteTab" component={this.FavoriteStack} />
           <Tab.Screen
             name="ProfileTab"
             component={
@@ -198,4 +201,7 @@ const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App);

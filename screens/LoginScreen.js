@@ -15,6 +15,11 @@ import {auth} from '../fire';
 import {setCurrentUser} from '../redux/user/user.actions';
 import {connect} from 'react-redux';
 
+import PrimaryButton from '../components/primaryButton';
+
+// CUSTOM COMPONENTS
+import Header from '../components/header';
+
 class LoginScreen extends React.Component {
   state = {
     email: '',
@@ -39,54 +44,51 @@ class LoginScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>{'Войти'}</Text>
-        </View>
+        <Header title="BeClean" />
 
-        <View style={styles.form}>
+        <View style={{padding: 15, flex: 1, justifyContent: 'center'}}>
           {this.state.errorMessage ? (
             <Text style={styles.errorText}>{this.state.errorMessage}</Text>
           ) : (
             <></>
           )}
-
           <TextInput
             style={styles.input}
             autoCapitalize="none"
             value={this.state.email}
             onChangeText={email => this.setState({email})}
-            placeholder="email address"
+            placeholder="Электронный адрес"
           />
-
           <TextInput
             style={styles.input}
             value={this.state.password}
             onChangeText={password => this.setState({password})}
             autoCapitalize="none"
-            placeholder="password"
+            placeholder="Пароль"
           />
 
-          <TouchableOpacity
-            style={styles.button}
+          <PrimaryButton
             onPress={() => {
               this.handleLogin();
             }}>
             {this.state.buttonPressed ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <Text style={{color: '#fff', fontWeight: '500'}}>Войти</Text>
+              <Text style={{color: '#fff', fontWeight: 'bold'}}>Войти</Text>
             )}
-          </TouchableOpacity>
-        </View>
+          </PrimaryButton>
 
-        <View style={{alignItems: 'center', marginVertical: 32}}>
-          <Text style={{color: '#414959', fontSize: 13}}>Впервые здесь? </Text>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('RegisterScreen')}>
-            <Text style={{fontWeight: '500', color: 'rgb(112, 172, 177)'}}>
-              Создать учетную запись
+          <View style={{alignItems: 'center', marginVertical: 32}}>
+            <Text style={{color: '#414959', fontSize: 13}}>
+              Впервые здесь?{' '}
             </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('RegisterScreen')}>
+              <Text style={{fontWeight: '500', color: '#598ec2'}}>
+                Создать учетную запись
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -99,7 +101,7 @@ class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(201, 230, 225)',
+    justifyContent: 'space-between',
   },
   title: {
     alignItems: 'center',
@@ -110,6 +112,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 30,
     alignSelf: 'flex-start',
+    color: '#011E3B',
   },
   errorText: {
     color: '#e9446a',
@@ -118,12 +121,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   form: {
-    alignItems: 'center',
+    justifyContent: 'center',
     marginHorizontal: 10,
   },
   input: {
     borderWidth: 2,
-    borderColor: 'rgb(112, 172, 177)',
+    borderColor: '#199EF3',
     marginBottom: 15,
     padding: 10,
     fontSize: 15,
@@ -146,4 +149,7 @@ const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user)),
 });
 
-export default connect(null, mapDispatchToProps)(LoginScreen);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(LoginScreen);

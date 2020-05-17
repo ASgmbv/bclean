@@ -40,6 +40,48 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 };
 
+export const addReview = (companyId, review, name) =>
+  new Promise((res, rej) => {
+    firestore
+      .collection('posts')
+      .doc(`${companyId}`)
+      .update({
+        reviews: firebase.firestore.FieldValue.arrayUnion({
+          review,
+          name,
+        }),
+      })
+      // .update({
+      //   review,
+      // })
+      .then(ref => res(ref))
+      .catch(err => rej(err));
+  });
+
+export const addFavorite = (companyId, email) =>
+  new Promise((res, rej) => {
+    firestore
+      .collection('posts')
+      .doc(`${companyId}`)
+      .update({
+        favorited: firebase.firestore.FieldValue.arrayUnion(email),
+      })
+      .then(ref => res(ref))
+      .catch(err => rej(err));
+  });
+
+export const removeFavorite = (companyId, email) =>
+  new Promise((res, rej) => {
+    firestore
+      .collection('posts')
+      .doc(`${companyId}`)
+      .update({
+        favorited: firebase.firestore.FieldValue.arrayRemove(email),
+      })
+      .then(ref => res(ref))
+      .catch(err => rej(err));
+  });
+
 export const addPost = async (
   companyName,
   companyPhone,
